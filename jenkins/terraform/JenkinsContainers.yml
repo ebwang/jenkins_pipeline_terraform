@@ -1,0 +1,28 @@
+kind: Pod
+spec:
+  containers:
+  - name: terraform
+    image: hashicorp/terraform
+    command: ['cat']
+    tty: true
+    workingDir: /home/jenkins/agent
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "1024Mi"
+        cpu: "2"
+    volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker-sock-volume
+  nodeSelector:
+    nodegroup-type: jenkins-nodes
+  tolerations:
+  - key: "jenkins-nodes"
+    operator: "Exists"
+    effect: "NoSchedule"
+  volumes:
+  - name: docker-sock-volume
+    hostPath:
+      path: /var/run/docker.sock
